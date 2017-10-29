@@ -60,14 +60,19 @@ class Crawler
   def check_owner(post_id)
     post_detail = get_detail(post_id)
     user_data = post_detail['ads']['dangBoi']
-    list_post = get_list_post_by_user(user_data)
 
-    if(list_post['data'].length <= 2)
-      puts 'https://landber.com/tin-dang/ban-nha-rieng/ha-noi/'+post_id
-      out_file = File.new('posts/'+post_id+'.json', 'w+')
-      out_file.write(post_detail.to_json)
-      out_file.close
+    # Skip if email blank
+    unless(user_data['email'].to_s.strip.empty?)
+      list_post = get_list_post_by_user(user_data)
+
+      if(list_post['data'].length <= 2)
+        puts 'https://landber.com/tin-dang/ban-nha-rieng/ha-noi/'+post_id
+        out_file = File.new('posts/'+post_id+'.json', 'w+')
+        out_file.write(post_detail.to_json)
+        out_file.close
+      end
     end
+
   end
 
   def get_detail(post_id)
